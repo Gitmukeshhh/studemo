@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class StudentService{
     @Autowired
     StudentRepository studentRepository;
-    public String addStudent(Student student){
+    public String addstudent(Student student){
         return  studentRepository.addStudent(student);
     }
 
