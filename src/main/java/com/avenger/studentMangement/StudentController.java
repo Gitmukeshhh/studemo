@@ -1,6 +1,8 @@
 package com.avenger.studentMangement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,42 +18,39 @@ public class StudentController {
 
       // getInformation
      @GetMapping("/get_student")
-     public Student getstudent(@RequestParam("q") int admnNo){
+     public ResponseEntity getstudent(@RequestParam("q") int admnNo){
 
-        return studentService.getStudent(admnNo);
+       Student student=  studentService.getStudent(admnNo);
+       return new ResponseEntity<>(student, HttpStatus.FOUND);
      }
 
 
        //UPPDATE INFORMATON
         @PutMapping("/update_student")
-        public String uppdateInfo(@RequestParam("admnNo") int admnNo,@RequestParam("age") int age){
+        public ResponseEntity uppdateInfo(@RequestParam("admnNo") int admnNo,@RequestParam("age") int age){
 
-         return studentService.updateStudent(admnNo,age);
-
+           String responces=studentService.updateStudent(admnNo,age);
+           if(responces==null){
+               return new ResponseEntity<>("Invalied request",HttpStatus.BAD_REQUEST);
+           }
+              return  new ResponseEntity<>("Update",HttpStatus.ACCEPTED);
         }
 
-          /*
-          // delete data
-          @DeleteMapping("/delete_info")
-      public String deleteInfo(@RequestParam("q") int admnNo){
 
-         if(!db.containsKey(admnNo)){
-             return "ky delete karu halava";
-         }else{
-             db.remove(admnNo);
-         }
-           return "kar diya bhai delete";
-      }
-      */
 
       @DeleteMapping("/delete_student/{id}")
-      public  String deleteStudent(@PathVariable("id") int id){
-           return studentService.deleteStudent(id);
+      public  ResponseEntity deleteStudent(@PathVariable("id") int id){
+         String response= studentService.deleteStudent(id);
+         if(response.equals("Invalid id")){
+             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+         }
+           return  new ResponseEntity<>(response,HttpStatus.FOUND);
       }
 
     //ADDING THE INFORMATION
     @PostMapping("/add_student")
-    public String addstudent(@RequestBody Student student){
-        return studentService.addStudent(student);
+    public ResponseEntity addstudent(@RequestBody Student student){
+        String response= studentService.addstudent(student);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 }

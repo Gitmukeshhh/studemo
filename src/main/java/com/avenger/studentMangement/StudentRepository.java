@@ -20,7 +20,7 @@ public class StudentRepository {
     }
     public  String deletStudent(int id){
         if(!db.containsKey(id)){
-            return "Invalied";
+            return "Invalid id";
         }else{
             db.remove(id);
         }
